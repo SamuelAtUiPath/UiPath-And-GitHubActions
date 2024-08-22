@@ -23,6 +23,7 @@ env:
   ORCH_ACC_NAME: ${{vars.ACCOUNT_NAME}}
   CLIVERSION: ${{vars.CLI_VERSION}}
   APPSCOPES: ${{vars.APP_SCOPES}}
+  PROJECT_JSON_PATH: ${{vars.PROJECT_JSON_PATH}}
 
 jobs:
   
@@ -52,7 +53,7 @@ jobs:
         run: |
           Set-Variable -Name PACKAGE_VERSION -Value (Get-Date).ToString("yyyyMMdd.HHmmss")
           echo $PACKAGE_VERSION
-          ${{ github.workspace }}\uipathcli\tools\uipcli.exe package pack ${{github.workspace}}\project.json -o ${{ github.workspace }}\packages -v $PACKAGE_VERSION
+          ${{ github.workspace }}\uipathcli\tools\uipcli.exe package pack ${{github.workspace}}\${{vars.PROJECT_JSON_PATH}} -o ${{ github.workspace }}\packages -v $PACKAGE_VERSION
           Get-ChildItem -path "${{github.workspace}}\packages" -r
       
       - name: Deploy Package
