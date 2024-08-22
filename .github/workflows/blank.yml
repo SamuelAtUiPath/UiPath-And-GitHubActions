@@ -1,0 +1,60 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+env:
+  PROJECT_FOLDER: Shared
+  ORCH_URL: ${{vars.CLOUD_URL}}/${{vars.ACCOUNT_NAME}}/${{vars.TENANT_NAME}}
+  ORCH_TENANT: ${{vars.TENANT_NAME}}
+  ORCH_CLIENT_ID: ${{vars.OAUTH_CLIENT_ID}}
+  ORCH_USER_KEY: ${{vars.OAUTH_CLIENT_SECRET}}
+  ORCH_ACC_NAME: ${{vars.ACCOUNT_NAME}}
+  CLIVERSION: ${{vars.CLI_VERSION}}
+  APPSCOPES: ${{vars.APP_SCOPES}}
+
+jobs:
+  
+  analyze-build-and-deploy:
+    runs-on: windows-latest
+    steps:
+      - name: Runner workspace path
+        run: echo ${{github.workspace}}
+      
+      - name: Cleaner
+        shell: pwsh
+        run: Get-ChildItem -path "${{github.workspace}}" -r | Remove-Item -r -force
+  
+      - name: Check out repository code
+        uses: actions/checkout@v4
+  
+      - name: Install Uipath Cli
+        shell: pwsh
+        run: |
+          New-Item ${{github.workspace}}\uipathcli\${{vars.CLI_VERSION}}\uipathcli -ItemType Directory -ea 0
+          Invoke-WebRequest "https://uipath.pkgs.visualstudio.com/Public.Feeds/_apis/packaging/feeds/1c781268-d43d-45ab-9dfc-0151a1c740b7/nuget/packages/UiPath.CLI.Windows/versions/${{vars.CLI_VERSION}}/content" -OutFile "${{github.workspace}}\\uipathcli\\${{vars.CLI_VERSION}}\\cli.zip"
+          Expand-Archive -LiteralPath "${{github.workspace}}\\uipathcli\\${{vars.CLI_VERSION}}\\cli.zip" -DestinationPath "${{github.workspace}}\\uipathcli\\"
+          echo "UiPath CLI is downloaded and extracted in folder ${{github.workspace}}\uipathcli\"
+  
+      - name: Build Project
+        shell: pwsh
+        run: |
+          Set-Variable -Name PACKAGE_VERSION -Value (Get-Date).ToString("yyyyMMdd.HHmmss")
+          echo $PACKAGE_VERSION
+          ${{ github.workspace }}\uipathcli\tools\uipcli.exe package pack ${{github.workspace}}\project.json -o ${{ github.workspace }}\packages -v $PACKAGE_VERSION
+          Get-ChildItem -path "${{github.workspace}}\packages" -r
+      
+      - name: Deploy Package
+        shell: pwsh
+        run: ${{ github.workspace }}\uipathcli\tools\uipcli.exe package deploy ${{github.workspace }}\packages\ ${{vars.CLOUD_URL}} ${{vars.TENANT_NAME}} -A ${{vars.ACCOUNT_NAME}} -I ${{vars.OAUTH_CLIENT_ID}} -S ${{vars.OAUTH_CLIENT_SECRET}} --applicationScope "${{vars.APP_SCOPES}}"
