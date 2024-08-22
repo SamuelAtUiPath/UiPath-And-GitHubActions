@@ -15,11 +15,10 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 env:
-  PROJECT_FOLDER: ${{vars.ORCH_FOLDER}}
   ORCH_URL: ${{vars.CLOUD_URL}}/${{vars.ACCOUNT_NAME}}/${{vars.TENANT_NAME}}
   ORCH_TENANT: ${{vars.TENANT_NAME}}
-  ORCH_CLIENT_ID: ${{vars.OAUTH_CLIENT_ID}}
-  ORCH_USER_KEY: ${{vars.OAUTH_CLIENT_SECRET}}
+  ORCH_CLIENT_ID: ${{secrets.OAUTH_CLIENT_ID}}
+  ORCH_USER_KEY: ${{secrets.OAUTH_CLIENT_SECRET}}
   ORCH_ACC_NAME: ${{vars.ACCOUNT_NAME}}
   CLIVERSION: ${{vars.CLI_VERSION}}
   APPSCOPES: ${{vars.APP_SCOPES}}
