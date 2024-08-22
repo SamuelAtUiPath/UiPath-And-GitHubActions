@@ -57,4 +57,4 @@ jobs:
       
       - name: Deploy Package
         shell: pwsh
-        run: ${{ github.workspace }}\uipathcli\tools\uipcli.exe package deploy ${{github.workspace }}\packages\ ${{vars.CLOUD_URL}} ${{vars.TENANT_NAME}} -A ${{vars.ACCOUNT_NAME}} -I ${{vars.OAUTH_CLIENT_ID}} -S ${{vars.OAUTH_CLIENT_SECRET}} --applicationScope "${{vars.APP_SCOPES}}"
+        run: ${{ github.workspace }}\uipathcli\tools\uipcli.exe package deploy ${{github.workspace }}\packages\ ${{vars.CLOUD_URL}} ${{vars.TENANT_NAME}} -A ${{vars.ACCOUNT_NAME}} -I ${{secrets.OAUTH_CLIENT_ID}} -S ${{secrets.OAUTH_CLIENT_SECRET}} --applicationScope "${{vars.APP_SCOPES}}"
