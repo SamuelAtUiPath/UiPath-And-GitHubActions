@@ -12,7 +12,7 @@ on:
 
 jobs:
   call-central-pipeline:
-    uses: SamuelAtUiPath/Actions-Pipelines/.github/workflows/central-pipeline.yml
+    uses: SamuelAtUiPath/Actions-Pipelines/.github/workflows/called-pipeline.yml@main
     with:
       PROJECT_JSON_PATH: GitHubActions\project.json
     secrets: inherit
