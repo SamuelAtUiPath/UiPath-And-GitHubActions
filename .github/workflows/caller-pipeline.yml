@@ -1,0 +1,18 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Caller
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  call-central-pipeline:
+    uses: SamuelAtUiPath/Actions-Pipelines/.github/workflows/central-pipeline.yml@main
+    with:
+      PROJECT_JSON_PATH: GitHubActions\project.json
+    secrets: inherit
