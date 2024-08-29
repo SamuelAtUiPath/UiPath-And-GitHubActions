@@ -6,29 +6,17 @@ name: Caller
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main", "test", "prod" ]
+    branches: ["prod"]
   pull_request:
-    branches: [ "main", "test", "prod" ]
+    branches: ["prod"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
   call-central-pipeline:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set TENANT_NAME
-        id: set-tenant-name
-        run: |
-          if [[ "${{ github.ref }}" == "refs/heads/test" ]]; then
-            echo "TENANT_NAME=Mars" >> $GITHUB_ENV
-          elif [[ "${{ github.ref }}" == "refs/heads/prod" ]]; then
-            echo "TENANT_NAME=Jupiter" >> $GITHUB_ENV
-          fi
-
-      - name: Call Central Pipeline
-        uses: SamuelAtUiPath/Actions-Pipelines/.github/workflows/called-pipeline.yml@main
-        with:
-          PROJECT_JSON_PATH: GitHubActions\project.json
-          TENANT_NAME: ${{ env.TENANT_NAME }}
-          secrets: inherit
+      uses: SamuelAtUiPath/Actions-Pipelines/.github/workflows/called-pipeline.yml@main
+      with:
+        PROJECT_JSON_PATH: GitHubActions\project.json
+        TENANT_NAME: Jupiter
+      secrets: inherit
