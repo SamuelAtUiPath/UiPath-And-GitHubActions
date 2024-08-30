@@ -19,6 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name }}  # This dynamically sets the environment based on the branch name
     steps:
+      - name: Show environment name
+        run: | 
+          echo "Environment: ${{ github.ref_name }}"
+        
       - name: Call Central Pipeline
         uses: SamuelAtUiPath/Actions-Pipelines/.github/workflows/called-pipeline.yml@main
         with:
