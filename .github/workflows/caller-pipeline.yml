@@ -15,18 +15,22 @@ on:
   workflow_dispatch:
 
 jobs:
+  echo-environment-name:
+      runs-on: ubuntu-latest
+      environment: ${{ github.ref_name }}  # This dynamically sets the environment based on the branch name
+      steps:
+        - name: Show environment name
+          run: | 
+            echo "Environment: ${{ github.ref_name }}"
+            
   call-central-pipeline:
-    runs-on: ubuntu-latest
-    environment: ${{ github.ref_name }}  # This dynamically sets the environment based on the branch name
-    steps:
-      - name: Show environment name
-        run: | 
-          echo "Environment: ${{ github.ref_name }}"
+      uses: SamuelAtUiPath/Actions-Pipelines/.github/workflows/called-pipeline.yml@main
+      with:
+        PROJECT_JSON_PATH: GitHubActions\project.json
+        TENANT_NAME: ${{ vars.TENANT_NAME }}  # Access TENANT_NAME from the environment's vars
+      secrets: inherit
+      
+  
         
-      - name: Call Central Pipeline
-        uses: SamuelAtUiPath/Actions-Pipelines/.github/workflows/called-pipeline.yml@main
-        with:
-          PROJECT_JSON_PATH: GitHubActions\project.json
-          TENANT_NAME: ${{ vars.TENANT_NAME }}  # Access TENANT_NAME from the environment's vars
-          secrets: inherit
+      
 
