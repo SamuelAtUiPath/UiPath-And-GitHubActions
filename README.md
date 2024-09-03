@@ -36,6 +36,10 @@ This operations work by using commands in the installed uipath cli executable fi
 
 Take a look at the job details at [this Pipeline](https://github.com/SamuelAtUiPath/Actions-Pipelines/blob/main/.github/workflows/called-pipeline.yml)
 
+### Storing variables and secrets
+It is a good practice to store variables and mainly secrets at your repository level, so that you can use them later in your pipeline.
+Reference: [GitHub Docs - Using secrets in GitHub Actions](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions)
+
 ## Avoiding duplicate code
 A good practice in pipelines is to have Central pipelines with its steps. Pipelines will have similar steps that generally will be different only by a few arguments.
 In this case we can make pipeline branched base to use the Central pipeline by passing its arguments to run.
