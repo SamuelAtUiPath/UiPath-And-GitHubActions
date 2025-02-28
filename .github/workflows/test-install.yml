@@ -1,0 +1,42 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Test CLI Installation
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+env:
+  PROJECT_FOLDER: Shared
+  ORCH_URL: https://staging.uipath.com/universe/Earth/
+  ORCH_TENANT: Earth
+  ORCH_CLIENT_ID: ${{vars.OAUTH_CLIENT_ID}}
+  ORCH_USER_KEY: ${{vars.OAUTH_CLIENT_SECRET}}
+  ORCH_ACC_NAME: universe
+  CLIVERSION: 23.10.8894.39673
+  APPSCOPES: ${{vars.APP_SCOPES}}
+
+jobs:
+  
+  analyze-build-and-deploy:
+    runs-on: windows-latest
+    steps:
+      - name: Runner workspace path
+        run: echo ${{github.workspace}}
+      
+      - name: Cleaner
+        shell: pwsh
+        run: Get-ChildItem -path "${{github.workspace}}" -r | Remove-Item -r -force
+  
+      - name: Check out repository code
+        uses: actions/checkout@v4
+  
+      - name: Install Uipath Cli
+        shell: pwsh
+        run: |
+          New-Item ${{github.workspace}}\uipathcli\${{vars.CLI_VERSION}}\uipathcli -ItemType Directory -ea 0
+          Invoke-WebRequest "https://uipath.pkgs.visualstudio.com/Public.Feeds/_apis/packaging/feeds/1c781268-d43d-45ab-9dfc-0151a1c740b7/nuget/packages/UiPath.CLI.Windows/versions/${{vars.CLI_VERSION}}/content" -OutFile "${{github.workspace}}\\uipathcli\\${{vars.CLI_VERSION}}\\cli.zip"
+          Expand-Archive -LiteralPath "${{github.workspace}}\\uipathcli\\${{vars.CLI_VERSION}}\\cli.zip" -DestinationPath "${{github.workspace}}\\uipathcli\\"
+          echo "UiPath CLI is downloaded and extracted in folder ${{github.workspace}}\uipathcli\"
