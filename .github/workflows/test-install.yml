@@ -36,7 +36,7 @@ jobs:
       - name: Install Uipath Cli
         shell: pwsh
         run: |
-          New-Item ${{github.workspace}}\uipathcli\$CLIVERSION\uipathcli -ItemType Directory -ea 0
-          Invoke-WebRequest "https://uipath.pkgs.visualstudio.com/Public.Feeds/_apis/packaging/feeds/1c781268-d43d-45ab-9dfc-0151a1c740b7/nuget/packages/UiPath.CLI.Windows/versions/$CLIVERSION/content" -OutFile "${{github.workspace}}\\uipathcli\\$CLIVERSION\\cli.zip"
-          Expand-Archive -LiteralPath "${{github.workspace}}\\uipathcli\\$CLIVERSION\\cli.zip" -DestinationPath "${{github.workspace}}\\uipathcli\\"
+          New-Item ${{github.workspace}}\uipathcli\${{env.CLIVERSION}}\uipathcli -ItemType Directory -ea 0
+          Invoke-WebRequest "https://uipath.pkgs.visualstudio.com/Public.Feeds/_apis/packaging/feeds/1c781268-d43d-45ab-9dfc-0151a1c740b7/nuget/packages/UiPath.CLI.Windows/versions/${{env.CLIVERSION}}/content" -OutFile "${{github.workspace}}\\uipathcli\\${{env.CLIVERSION}}\\cli.zip"
+          Expand-Archive -LiteralPath "${{github.workspace}}\\uipathcli\\${{env.CLIVERSION}}\\cli.zip" -DestinationPath "${{github.workspace}}\\uipathcli\\"
           echo "UiPath CLI is downloaded and extracted in folder ${{github.workspace}}\uipathcli\"
